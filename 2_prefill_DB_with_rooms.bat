@@ -1,0 +1,4 @@
+cd C:\Program Files\MongoDB\Server\3.4\bin
+mongo.exe donuts --eval "db.rooms.insert({name:'Dark entrance',description:'A mysterious, long entrance with dark stairs at one end.',items:[{item:'a brush',weight:5},{item:'a bottle of water',weight:10}],color: 'dark',doors:[{door:'north'}]});"
+mongo.exe donuts --eval "db.rooms.insert({name:'Golden bathroom',description:'Gold everywhere! Maybe the golden donut is in here? Don\'t get too dazzled by the gold, you\'re on the quest for the golden donut only!',items:[{item:'a pill to help digestion',weight:1.5},{item:'a golden brush',weight:15}],color:'gold',doors:[{door:'south'}]});"
+pause

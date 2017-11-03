@@ -1,0 +1,75 @@
+In mongo client
+
+
+> show dbs
+
+// creates a new db
+> use donuts      
+
+// create 2 documents: rooms
+> j = { name: "Dark entrance",
+	description: "A mysterious, long entrance with dark stairs at one end.",
+	items: [
+		{ item: "a brush", weight: 5 },
+		{ item: "a bottle of water", weight: 10 }
+		],
+	color: "dark",
+	doors: [{door: "north"}]
+	}
+> k = { name: Golden bathroom",
+	description: "Gold everywhere! Maybe the golden donut is in here? Don't get too dazzled by the gold, you're on the quest for the golden donut only!",
+	items: [
+		{ item: "a pill to help digestion", weight: 1.5 },
+		{ item: "a golden brush", weight: 15 }
+		],
+	color: "gold",
+	doors: [{door: "south"}]
+	}
+
+// check that no collections yet exist in mydb
+> show collections
+
+
+// insert them into the new db
+> db.rooms.insert( j )
+> db.rooms.insert( k )
+
+// check that the new db exists
+> show collections
+
+// Confirm that the documents exist in the rooms collection by issuing 
+// a query on the collection using the find() method:
+> db.rooms.find()
+// note: All MongoDB documents must have an _id field with a unique value.
+
+//________________________________________________________
+
+// find a room by name and print all items in that room
+> var c = db.rooms.find( { name: "Golden bathroom" } )
+> printjson( c.next().items )
+
+> while ( c.hasNext() ) {
+	if ( c.next().items != undefined ) {
+		printjson( 'this room has items' )
+	}
+}
+
+
+// find a document, given its ID
+> theId = c [ 4 ]._id
+> theId
+> db.rooms.find( {_id: theId } )
+
+
+// delete the entire collection 
+// *** BE CAREFUL ***
+> use mydb      
+> db.dropDatabase()
+
+// if you get lost and want do know in which collection you are...
+> db.getName()
+// or
+> db.getCollectionNames()
+
+// to access a collection by its name:
+> db.getCollection( "rooms" ).find()

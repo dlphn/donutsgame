@@ -1,0 +1,29 @@
+donuts:.
+|   app.js
+|   package.json
+|   
++---data
+|           
++---node_modules
+|           
++---public
+|   +---images
+|   |       
+|   +---javascripts
+|   |       chat.js
+|   |       jquery.js
+|   |       
+|   \---stylesheets
+|           style.css
+|           
++---routes
+|   |   index.js
+|   |   sockets.js
+|   |   
+|   \---datasets
+|           rooms.js
+|           
+\---views
+        index.jade
+        layout.jade
+        

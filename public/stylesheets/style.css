@@ -1,0 +1,220 @@
+html {
+	height: 100%;
+}
+
+body {
+  background-image: url('/images/donuts-wallpaper-3.jpg');
+  background-attachment: fixed;
+  background-position: center; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  font: 14px "Droid Sans", sans-serif;
+  margin: 0px;
+  padding: 0px;
+  height: -moz-calc(100% - 50px);
+  height: -webkit-calc(100% - 50px);
+  height: calc(100% - 50px);
+}
+
+section#chat {
+  margin: auto;
+  width: 75%;
+  min-width: 200px;
+  margin-top: 0px;
+  height: -moz-calc(100% - 110px);
+  height: -webkit-calc(100% - 110px);
+  height: calc(100% - 110px);
+  background-color: #EFFFEC;
+  border-radius: 5px 5px 0px 0px;
+}
+
+div#output {
+  height: -moz-calc(100% - 33px);
+  height: -webkit-calc(100% - 33px);
+  height: calc(100% - 33px);
+  padding: 15px;
+  -moz-box-sizing:border-box;
+  -webkit-box-sizing:border-box;
+  box-sizing:border-box;
+  overflow: auto;
+}
+
+div#input {
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+input#cmd {
+  width: -moz-calc(100% - 112px);
+  width: -webkit-calc(100% - 112px);
+  width: calc(100% - 112px);
+  border-color: #747474;
+  border-image: none;
+  border-radius: 4px 4px 4px 4px;
+  border-style: solid;
+  border-width: 0.5px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset,
+  0 1px 2px rgba(0, 0, 0, 0.05);
+  line-height: 20px;
+  padding: 4px 12px;
+  text-decoration: none;
+}
+
+input#sendButton {
+  width: 84px;
+  background-color: #5BB75B;
+  background-image: linear-gradient(to bottom, #62C462, #51A351);
+  background-repeat: repeat-x;
+  border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25);
+  color: #FFFFFF;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  border-image: none;
+  border-radius: 4px 4px 4px 4px;
+  border-style: solid;
+  border-width: 1px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset,
+  0 1px 2px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 4px 12px;
+  text-align: center;
+  text-decoration: none;
+  margin-left: 2px;
+}
+
+header h1 {
+  font-family: "Amatic SC", cursive;
+  color: #FFFFFF;
+  font-size: 3em;
+  text-align: center;
+  text-shadow: #000000 1px 1px, #000000 -1px 1px, #000000 -1px -1px, #000000 1px -1px;
+}
+
+footer {
+  padding: 6px;
+  background-color:pink;
+  color: #232323;
+  bottom: 0;
+  position: absolute;
+  width: 100%;
+  margin: 0px;
+  -moz-box-sizing:border-box;
+  -webkit-box-sizing:border-box;
+  box-sizing:border-box;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.modal{
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  height: -moz-calc(100% - 161px);
+  height: -webkit-calc(100% - 161px);
+  height: calc(100% - 161px);
+  left: 0;
+  position: absolute;
+  top: 110px;
+  width: 100%;
+  z-index: 1000;
+}
+
+.backdrop{
+  background-color: #EFFFEC;
+  margin: auto;
+  width: 75%;
+  min-width: 200px;
+  margin-top: 0px;
+  height: 100%;
+  border-radius: 5px 5px 0px 0px;
+}
+
+.popup {
+  position: absolute;
+  height: 100px;
+  width: 300px;
+  left: -moz-calc(50% - 150px);
+  left: -webkit-calc(50% - 150px);
+  left: calc(50% - 150px);
+  top: -moz-calc(50% - 60px);
+  top: -webkit-calc(50% - 60px);
+  top: calc(50% - 60px);
+  background: #FFFFFF;
+  border-color: #232323;
+  border-radius: 2px;
+  border-style: solid;
+  border-width: 0.5px;
+}
+
+.pophead {
+  background-color: pink;
+  color: #232323;
+  font-weight: bold;
+  padding: 8px 3px;
+  vertical-align: middle;
+}
+
+.popbody {
+  padding: 10px 5px;
+}
+
+input#nickname {
+  width: -moz-calc(100% - 112px);
+  width: -webkit-calc(100% - 112px);
+  width: calc(100% - 112px);
+  border-color: #747474;
+  border-image: none;
+  border-radius: 4px 4px 4px 4px;
+  border-style: solid;
+  border-width: 0.5px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset,
+  0 1px 2px rgba(0, 0, 0, 0.05);
+  line-height: 20px;
+  padding: 3px 12px;
+  text-decoration: none;
+}
+
+input#setname {
+  width: 84px;
+  background-color: #5BB75B;
+  background-image: linear-gradient(to bottom, #62C462, #51A351);
+  background-repeat: repeat-x;
+  border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25);
+  color: #FFFFFF;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  border-image: none;
+  border-radius: 4px 4px 4px 4px;
+  border-style: solid;
+  border-width: 1px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset,
+  0 1px 2px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 3px 12px;
+  text-align: center;
+  text-decoration: none;
+  margin-left: 2px;
+}
+
+.name {
+  color: gold;
+}
+
+.myMessage {
+  color: #455A8B;
+}
+
+.userMessage {
+  color: darkorange;
+}
+
+.systemMessage {
+  font-style: italic;
+  color: #5B5A5A;
+}
