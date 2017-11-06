@@ -1,12 +1,12 @@
 # donutsgame
 A simple multiplayer text-based adventure game where you have to find the golden donut.
 
-## Files to open:
+## To run the game:
 ```shell
       $ npm install
 ```
-* 1_startMongo (PC - verify MongoDB version)
-* 2_prefill_DB_with_rooms (PC)
+* 1_startMongo.bat (PC - verify MongoDB version)
+* 2_prefill_DB_with_rooms.bat (PC)
 ```shell
       $ npm start
 ```
