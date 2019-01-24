@@ -10,7 +10,28 @@ chatInfra.on('name_set', function(data) {
     var discover = 0; //donut discovered
     var highscore = $.makeArray(JSON.parse(localStorage.getItem('highscore')));
     var name = data.name;
-    var taste1 = [{flavour:"dark chocolate", points: 10}, {flavour:"milk chocolate", points: 7}, {flavour:"white chocolate", points: 5}, {flavour:"sugar", points: 15}, {flavour:"vanilla", points: 13}, {flavour:"strawberry", points: 12}, {flavour:"jelly", points: 9}, {flavour:"cinnamon", points: 3}, {flavour:"mayonnese", points: -10}, {flavour:"ketchup", points: -9}, {flavour:"peanut butter", points: 10}, {flavour:"coffee", points: 6}, {flavour:"blueberry", points: 16}, {flavour:"mustard", points: -12}, {flavour:"BBQ", points: -7}, {flavour:"béchamel", points: -18}, {flavour:"spinach", points: -20}, {flavour:"ham", points: -19}, {flavour:"banana", points: 10}, {flavour:"avocado", points: 8}];
+    var taste1 = [
+        {flavour:"dark chocolate", points: 10}, 
+        {flavour:"milk chocolate", points: 7}, 
+        {flavour:"white chocolate", points: 5}, 
+        {flavour:"sugar", points: 15}, 
+        {flavour:"vanilla", points: 13}, 
+        {flavour:"strawberry", points: 12}, 
+        {flavour:"jelly", points: 9}, 
+        {flavour:"cinnamon", points: 3}, 
+        {flavour:"mayonnese", points: -10}, 
+        {flavour:"ketchup", points: -9}, 
+        {flavour:"peanut butter", points: 10}, 
+        {flavour:"coffee", points: 6}, 
+        {flavour:"blueberry", points: 16}, 
+        {flavour:"mustard", points: -12}, 
+        {flavour:"BBQ", points: -7}, 
+        {flavour:"béchamel", points: -18}, 
+        {flavour:"spinach", points: -20}, 
+        {flavour:"ham", points: -19}, 
+        {flavour:"banana", points: 10}, 
+        {flavour:"avocado", points: 8},
+    ];
     // 20 flavours
     var donut = {flavour1:"", flavour2:"", points:0};
     var gameIsRunning = true;
@@ -51,13 +72,17 @@ chatInfra.on('name_set', function(data) {
         currentRoomName = data.name;
     });
     
-    chatInfra.on('your_paint_streak', function (color) {
-        output.append('<div class="serverMessage">You put a '+color+' paint streak next to the door.</div>');
+    chatInfra.on('your_paint_streak', function (data) {
+        if (currentRoomName == data.room) {
+            output.append('<div class="serverMessage">You put a ' + data.color + ' paint streak next to the door.</div>');
+        }
         output.scrollTop(output[0].scrollHeight);
     });
     
     chatInfra.on('paint_streak', function (data) {
-        output.append('<div class="serverMessage">' + data.user + ' has put a '+data.color+' paint streak next to the door.</div>');
+        if (currentRoomName == data.room) {
+            output.append('<div class="serverMessage">' + data.user + ' has put a ' + data.color + ' paint streak next to the door.</div>');
+        }
         output.scrollTop(output[0].scrollHeight);
     });
     
@@ -112,8 +137,9 @@ chatInfra.on('name_set', function(data) {
 
     chatCom.on('message', function (data) {
         data = JSON.parse(data);
-        output.append('<div class="'+data.type+'">' + '<span class="name">' + data.username + ':</span> '+ data.message + '</div>');
-        
+        if (currentRoomName == data.room) {
+            output.append('<div class="'+data.type+'">' + '<span class="name">' + data.username + ':</span> '+ data.message + '</div>');
+        }
         if (data.type == 'myMessage') {
             if (data.message == '.highscore') {
                 output.append('<div class="serverMessage">' + highscore.map(function(element){
@@ -156,6 +182,7 @@ chatInfra.on('name_set', function(data) {
             if (data.message == '.go north' || data.message == '.north' || data.message == '.n') {
                 if (currentRoomName === "Dark entrance")  {
                     var data = {
+                        username: data.username,
                         room: currentRoomName,
                         message: 'exit_DarkEntrance',
                         type: 'serverMessage'
@@ -169,6 +196,7 @@ chatInfra.on('name_set', function(data) {
             if (data.message == '.go south' || data.message == '.south' || data.message == '.s') {
                 if (currentRoomName === "Golden bathroom")  {
                     var data = {
+                        username: data.username,
                         room: currentRoomName,
                         message: 'exit_GoldenBathroom',
                         type: 'serverMessage'
@@ -202,6 +230,7 @@ chatInfra.on('name_set', function(data) {
             }
             if (data.message.startsWith('.paint') && (data.message !== '.paint') && (data.message !== '.paint ')) {
                 var data = {
+                    username: data.username,
                     room: currentRoomName,
                     message: 'paint',
                     type: 'serverMessage',
@@ -212,6 +241,7 @@ chatInfra.on('name_set', function(data) {
             }
             if (data.message.startsWith('.pick') && (data.message !== '.pick') && (data.message !== '.pick ')) {
                 var data = {
+                    username: data.username,
                     room: currentRoomName,
                     message: 'pickObject',
                     type: 'serverMessage',
@@ -222,6 +252,7 @@ chatInfra.on('name_set', function(data) {
             }
             if (data.message == '.bag') {
                 var data = {
+                    username: data.username,
                     room: currentRoomName,
                     message: 'showBag',
                     type: 'serverMessage'
@@ -231,6 +262,7 @@ chatInfra.on('name_set', function(data) {
             }
             if (data.message.startsWith('.use') && (data.message !== '.use') && (data.message !== '.use ')) {
                 var data = {
+                    username: data.username,
                     room: currentRoomName,
                     message: 'useObject',
                     type: 'serverMessage',
@@ -289,7 +321,7 @@ chatInfra.on('name_set', function(data) {
                 chatInfra.emit("quit_game", {name: name});
             }
             if (data.message.startsWith(".")) {
-                if (validCmd===false) {
+                if (validCmd === false) {
                     output.append('<div class="serverMessage">Sorry '+name+', what?</div>');
                 } else {
                     output.append('<div class="serverMessage">[current score is:'+score+']</div>');
@@ -305,8 +337,9 @@ chatInfra.on('name_set', function(data) {
 
     $("#sendButton").click(function() {
         if (gameIsRunning) {
-            console.log('Game is running');
+            // console.log('Game is running');
             var data = {
+                username: name,
                 type: 'userMessage',
                 message: cmd.val(),
                 room: currentRoomName
@@ -314,7 +347,7 @@ chatInfra.on('name_set', function(data) {
             chatCom.send(JSON.stringify(data));
             cmd.val('');
         } else {
-            console.log('Game not running');
+            // console.log('Game not running');
         }
     });
 
