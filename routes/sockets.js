@@ -25,50 +25,49 @@ exports.initialize = function(server) {
     var chatInfra = io.of("/chat_infra")
     .on("connection", function(socket){
         socket.on("set_name",function(data){
-            socket.set('nickname', data.name, function(){
-                counter ++;
-                playerList[ socket.id ] = {
-                    id: counter,
-                    name: data.name,
-                    bag: [
-                        {item: 'bottle(s) of water', number: 1},
-                        {item: 'tissue(s)', number: 15},
-                        {item: 'pill(s) to help digestion', number: 1},
-                        {item: 'brush(es)', number: 0},
-                        {item: 'golden brush(es)', number: 0}
-                    ]
-                };
-                console.log("new player logged in -> id = "+counter+", nickname is "+data.name);
-                console.log(darkRoom.name);
-                
-                socket.join(darkRoom.name);
-                socket.namespace = chatCom;
-                socket.join(darkRoom.name);
-                socket.namespace = chatInfra;
-                
-                socket.emit('name_set', data);
-                socket.send(JSON.stringify(
-                    {type:'serverMessage', 
-                     message: "You enter the house of Donuts. It smells all sugary around here. You have just enrolled in the quest for the golden donut! But which one is it? You will have to try them ALL.<br>"
-                     + "Type: 'highscore' to see the table of scores,<br>"
-                     + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'open' to find something,<br>"
-                     + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'eat' to eat the donut and gain points, which are recorded in your score,<br>"
-                     + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'help' to have a reminder of the commands,<br>"
-                     + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'go north', 'north' or 'n' to move in a certain direction,<br>"
-                     + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'pick [object]' to pick the object,<br>"
-                     + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'bag' to see what you have in your bag,<br>"
-                     + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'use [object]' to use the object,<br>"
-                     + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'paint [color]' to put a paint streak next to the door,<br>"
-                     + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'quit' to stop playing. You won't be able to chat anymore.<br>"
-                     + "Your only weapons are your hands and your mouth.<br>"
-                     + "You are in the "+darkRoom.name+". "+darkRoom.description+"<br>"
-                     + "On the ground lay:<br>"
-                     + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ "+darkRoom.items[0].item+" that weighs "+darkRoom.items[0].weight+" kg,<br>"
-                     + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ "+darkRoom.items[1].item+" that weighs "+darkRoom.items[1].weight+" kg.<br>"
-                     + "There is a door on "+darkRoom.doors[0].door+"ern wall and a "+darkRoom.color+" paint streak next to that door.<br>"}
-                ));
-                socket.broadcast.to(darkRoom.name).emit('user_entered', data.name);
-            });
+            socket.nickname = data.name;
+            counter ++;
+            playerList[ socket.id ] = {
+                id: counter,
+                name: data.name,
+                bag: [
+                    {item: 'bottle(s) of water', number: 1},
+                    {item: 'tissue(s)', number: 15},
+                    {item: 'pill(s) to help digestion', number: 1},
+                    {item: 'brush(es)', number: 0},
+                    {item: 'golden brush(es)', number: 0}
+                ]
+            };
+            console.log("new player logged in -> id = "+counter+", nickname is "+data.name);
+            console.log(darkRoom.name);
+            
+            socket.join(darkRoom.name);
+            socket.namespace = chatCom;
+            socket.join(darkRoom.name);
+            socket.namespace = chatInfra;
+            
+            socket.emit('name_set', data);
+            socket.send(JSON.stringify(
+                {type:'serverMessage', 
+                    message: "You enter the house of Donuts. It smells all sugary around here. You have just enrolled in the quest for the golden donut! But which one is it? You will have to try them ALL.<br>"
+                    + "Type: 'highscore' to see the table of scores,<br>"
+                    + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'open' to find something,<br>"
+                    + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'eat' to eat the donut and gain points, which are recorded in your score,<br>"
+                    + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'help' to have a reminder of the commands,<br>"
+                    + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'go north', 'north' or 'n' to move in a certain direction,<br>"
+                    + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'pick [object]' to pick the object,<br>"
+                    + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'bag' to see what you have in your bag,<br>"
+                    + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'use [object]' to use the object,<br>"
+                    + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'paint [color]' to put a paint streak next to the door,<br>"
+                    + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'quit' to stop playing. You won't be able to chat anymore.<br>"
+                    + "Your only weapons are your hands and your mouth.<br>"
+                    + "You are in the "+darkRoom.name+". "+darkRoom.description+"<br>"
+                    + "On the ground lay:<br>"
+                    + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ "+darkRoom.items[0].item+" that weighs "+darkRoom.items[0].weight+" kg,<br>"
+                    + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ "+darkRoom.items[1].item+" that weighs "+darkRoom.items[1].weight+" kg.<br>"
+                    + "There is a door on "+darkRoom.doors[0].door+"ern wall and a "+darkRoom.color+" paint streak next to that door.<br>"}
+            ));
+            socket.broadcast.to(darkRoom.name).emit('user_entered', data.name);
         });
         
         socket.on('message', function(message) {
