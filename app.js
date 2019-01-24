@@ -19,7 +19,7 @@ const uri = 'mongodb://' + process.env.MONGO_USER + ':' + process.env.MONGO_PWD
   + process.env.MONGO_HOST + '-shard-00-02-abqor.mongodb.net:27017/' 
   + process.env.MONGO_DB 
   + '?ssl=true&authSource=admin';
-mongoose.connect(uri);
+mongoose.connect(uri, {useMongoClient: true});
 // mongoose.connect('mongodb://localhost:27017/donuts');
 
 // all environments

@@ -12,13 +12,11 @@ exports.initialize = function(server) {
     
     Room.find({ name: 'Dark entrance' }, function (err, room) {
         if (err) return console.error(err);
-        console.log("found " , room);
         darkRoom = room[0];
     });
 
     Room.find({ name: 'Golden bathroom' }, function (err, room) {
         if (err) return console.error(err);
-        console.log("found " , room);
         goldenRoom = room[0];
     });
     
@@ -39,7 +37,6 @@ exports.initialize = function(server) {
                 ]
             };
             console.log("new player logged in -> id = "+counter+", nickname is "+data.name);
-            console.log(darkRoom.name);
             
             socket.join(darkRoom.name);
             socket.namespace = chatCom;
@@ -72,10 +69,9 @@ exports.initialize = function(server) {
         
         socket.on('message', function(message) {
             message = JSON.parse(message);
-            console.log(message);
             nickname = message.username;
             if (message.message == 'exit_DarkEntrance') {
-                console.log("changing room...");
+                // console.log("changing room...");
                 socket.leave(darkRoom.name);
                 socket.join(goldenRoom.name);
                 socket.namespace = chatCom;
@@ -87,7 +83,7 @@ exports.initialize = function(server) {
                 socket.broadcast.to(darkRoom.name).emit('user_left', nickname);
             }
             if (message.message == 'exit_GoldenBathroom') {
-                console.log("changing room...");
+                // console.log("changing room...");
                 socket.leave(goldenRoom.name);
                 socket.join(darkRoom.name);
                 socket.namespace = chatCom;
@@ -99,13 +95,12 @@ exports.initialize = function(server) {
                 socket.broadcast.to(goldenRoom.name).emit('user_left', nickname);
             }
             if (message.message == 'paint') {
-                console.log("painting a streak in", message.room);
+                // console.log("painting a streak in", message.room);
                 if ((playerList[ socket.nickname ].bag[3].number == 0) && (playerList[ socket.nickname ].bag[4].number == 0)) {
                     socket.emit('no_paint');
                 } else {
                     if (message.room == darkRoom.name) {
                         darkRoom.color = message.color;
-                        console.log(darkRoom);
                         data = {
                             user: nickname,
                             color: message.color,
@@ -140,7 +135,7 @@ exports.initialize = function(server) {
                 }
             }
             if (message.message == 'pickObject') {
-                console.log("picking an object in", message.room);
+                // console.log("picking an object in", message.room);
                 if (message.room == darkRoom.name) {
                     if ((message.object == 'bottle') || (message.object == 'water')) {
                         if (bagWeight + 10 > maxWeight) {
@@ -148,7 +143,6 @@ exports.initialize = function(server) {
                         } else {
                             playerList[ socket.nickname ].bag[0].number += 1;
                             bagWeight += 10;
-                            console.log('picked', JSON.stringify(playerList, null, 2));
                             socket.emit('picked', 'bottle');
                         }
                     } else if (message.object == 'brush') {
@@ -157,7 +151,6 @@ exports.initialize = function(server) {
                         } else {
                             playerList[ socket.nickname ].bag[3].number += 1;
                             bagWeight += 5;
-                            console.log('picked', JSON.stringify(playerList, null, 2));
                             socket.emit('picked', message.object);
                         }
                     } else {
@@ -194,7 +187,7 @@ exports.initialize = function(server) {
                 socket.emit('bag', bag);
             }
             if (message.message == 'useObject') {
-                console.log("using object in", message.room);
+                // console.log("using object in", message.room);
                 if ((message.object == 'bottle') || (message.object == 'water')) {
                     if (playerList[ socket.nickname ].bag[0].number > 0) {
                         playerList[ socket.nickname ].bag[0].number += -1;
@@ -237,7 +230,7 @@ exports.initialize = function(server) {
         socket.on('quit_game', function(data) {
             socket.broadcast.emit('user_quit', data);
             delete playerList[ socket.nickname ];
-            console.log(playerList);
+            // console.log(playerList);
         });
 
         /*socket.on('disconnect', function() {
@@ -252,16 +245,14 @@ exports.initialize = function(server) {
     .on("connection", function(socket) {
         socket.on('message', function(message){
             message = JSON.parse(message);
-            console.log(message);
             if (message.type == "userMessage") {
 
                 if (!message.message.startsWith('.')) {
-                    console.log("... message re-sent to all except sender in room "+message.room);
+                    // console.log("... message re-sent to all except sender in room "+message.room);
                     socket.broadcast.emit('message', JSON.stringify(message));
                 }
                 
-                console.log("... message re-sent to sender");
-                
+                // console.log("... message re-sent to sender");
                 message.type = "myMessage";
                 socket.send(JSON.stringify(message));
             }

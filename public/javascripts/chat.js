@@ -10,7 +10,28 @@ chatInfra.on('name_set', function(data) {
     var discover = 0; //donut discovered
     var highscore = $.makeArray(JSON.parse(localStorage.getItem('highscore')));
     var name = data.name;
-    var taste1 = [{flavour:"dark chocolate", points: 10}, {flavour:"milk chocolate", points: 7}, {flavour:"white chocolate", points: 5}, {flavour:"sugar", points: 15}, {flavour:"vanilla", points: 13}, {flavour:"strawberry", points: 12}, {flavour:"jelly", points: 9}, {flavour:"cinnamon", points: 3}, {flavour:"mayonnese", points: -10}, {flavour:"ketchup", points: -9}, {flavour:"peanut butter", points: 10}, {flavour:"coffee", points: 6}, {flavour:"blueberry", points: 16}, {flavour:"mustard", points: -12}, {flavour:"BBQ", points: -7}, {flavour:"béchamel", points: -18}, {flavour:"spinach", points: -20}, {flavour:"ham", points: -19}, {flavour:"banana", points: 10}, {flavour:"avocado", points: 8}];
+    var taste1 = [
+        {flavour:"dark chocolate", points: 10}, 
+        {flavour:"milk chocolate", points: 7}, 
+        {flavour:"white chocolate", points: 5}, 
+        {flavour:"sugar", points: 15}, 
+        {flavour:"vanilla", points: 13}, 
+        {flavour:"strawberry", points: 12}, 
+        {flavour:"jelly", points: 9}, 
+        {flavour:"cinnamon", points: 3}, 
+        {flavour:"mayonnese", points: -10}, 
+        {flavour:"ketchup", points: -9}, 
+        {flavour:"peanut butter", points: 10}, 
+        {flavour:"coffee", points: 6}, 
+        {flavour:"blueberry", points: 16}, 
+        {flavour:"mustard", points: -12}, 
+        {flavour:"BBQ", points: -7}, 
+        {flavour:"béchamel", points: -18}, 
+        {flavour:"spinach", points: -20}, 
+        {flavour:"ham", points: -19}, 
+        {flavour:"banana", points: 10}, 
+        {flavour:"avocado", points: 8},
+    ];
     // 20 flavours
     var donut = {flavour1:"", flavour2:"", points:0};
     var gameIsRunning = true;
@@ -300,7 +321,7 @@ chatInfra.on('name_set', function(data) {
                 chatInfra.emit("quit_game", {name: name});
             }
             if (data.message.startsWith(".")) {
-                if (validCmd===false) {
+                if (validCmd === false) {
                     output.append('<div class="serverMessage">Sorry '+name+', what?</div>');
                 } else {
                     output.append('<div class="serverMessage">[current score is:'+score+']</div>');
@@ -316,7 +337,7 @@ chatInfra.on('name_set', function(data) {
 
     $("#sendButton").click(function() {
         if (gameIsRunning) {
-            console.log('Game is running');
+            // console.log('Game is running');
             var data = {
                 username: name,
                 type: 'userMessage',
@@ -326,7 +347,7 @@ chatInfra.on('name_set', function(data) {
             chatCom.send(JSON.stringify(data));
             cmd.val('');
         } else {
-            console.log('Game not running');
+            // console.log('Game not running');
         }
     });
 
