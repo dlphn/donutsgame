@@ -307,6 +307,7 @@ chatInfra.on('name_set', function(data) {
         if (gameIsRunning) {
             console.log('Game is running');
             var data = {
+                username: name,
                 type: 'userMessage',
                 message: cmd.val(),
                 room: currentRoomName

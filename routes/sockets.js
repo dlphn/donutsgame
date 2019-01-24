@@ -245,18 +245,16 @@ exports.initialize = function(server) {
     .on("connection", function(socket) {
         socket.on('message', function(message){
             message = JSON.parse(message);
+            console.log(message);
             if (message.type == "userMessage") {
-                socket.get('nickname', function(err, nickname) {
-                    message.username = nickname;
-
-                    console.log("... message re-sent to all except sender in room "+message.room);
-                   socket.broadcast.to(message.room).emit('message', JSON.stringify(message));
-                    
-                    console.log("... message re-sent to sender");
-                    
-                    message.type = "myMessage";
-                    socket.send(JSON.stringify(message));
-                });
+                
+                console.log("... message re-sent to all except sender in room "+message.room);
+                socket.broadcast.to(message.room).emit('message', JSON.stringify(message));
+                
+                console.log("... message re-sent to sender");
+                
+                message.type = "myMessage";
+                socket.send(JSON.stringify(message));
             }
         });
     });
