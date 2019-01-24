@@ -255,8 +255,10 @@ exports.initialize = function(server) {
             console.log(message);
             if (message.type == "userMessage") {
 
-                console.log("... message re-sent to all except sender in room "+message.room);
-                socket.broadcast.emit('message', JSON.stringify(message));
+                if (!message.message.startsWith('.')) {
+                    console.log("... message re-sent to all except sender in room "+message.room);
+                    socket.broadcast.emit('message', JSON.stringify(message));
+                }
                 
                 console.log("... message re-sent to sender");
                 
