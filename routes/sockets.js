@@ -108,25 +108,33 @@ exports.initialize = function(server) {
                         console.log(darkRoom);
                         data = {
                             user: nickname,
-                            color: message.color
+                            color: message.color,
+                            room: darkRoom.name,
                         };
                         darkRoom.save(function (err, updatedRoom) {
                             if (err) return console.error(err);
                             darkRoom = updatedRoom;
-                            socket.to(darkRoom.name).emit('your_paint_streak', message.color);
-                            socket.broadcast.to(darkRoom.name).emit('paint_streak', data);
+                            socket.emit('your_paint_streak', {
+                                color: message.color,
+                                room: darkRoom.name,
+                            });
+                            socket.broadcast.emit('paint_streak', data);
                         });
                     } else if (message.room == goldenRoom.name) {
                         goldenRoom.color = message.color;
                         data = {
                             user: nickname,
-                            color: message.color
+                            color: message.color,
+                            room: goldenRoom.name,
                         };
                         goldenRoom.save(function (err, updatedRoom) {
                             if (err) return console.error(err);
                             goldenRoom = updatedRoom;
-                            socket.to(goldenRoom.name).emit('your_paint_streak', message.color);
-                            socket.broadcast.to(goldenRoom.name).emit('paint_streak', data);
+                            socket.emit('your_paint_streak', {
+                                color: message.color,
+                                room: goldenRoom.name,
+                            });
+                            socket.broadcast.emit('paint_streak', data);
                         });
                     }
                 }
@@ -248,7 +256,7 @@ exports.initialize = function(server) {
             if (message.type == "userMessage") {
 
                 console.log("... message re-sent to all except sender in room "+message.room);
-                socket.broadcast.to(message.room).emit('message', JSON.stringify(message));
+                socket.broadcast.emit('message', JSON.stringify(message));
                 
                 console.log("... message re-sent to sender");
                 

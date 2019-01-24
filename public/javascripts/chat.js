@@ -51,13 +51,17 @@ chatInfra.on('name_set', function(data) {
         currentRoomName = data.name;
     });
     
-    chatInfra.on('your_paint_streak', function (color) {
-        output.append('<div class="serverMessage">You put a '+color+' paint streak next to the door.</div>');
+    chatInfra.on('your_paint_streak', function (data) {
+        if (currentRoomName == data.room) {
+            output.append('<div class="serverMessage">You put a ' + data.color + ' paint streak next to the door.</div>');
+        }
         output.scrollTop(output[0].scrollHeight);
     });
     
     chatInfra.on('paint_streak', function (data) {
-        output.append('<div class="serverMessage">' + data.user + ' has put a '+data.color+' paint streak next to the door.</div>');
+        if (currentRoomName == data.room) {
+            output.append('<div class="serverMessage">' + data.user + ' has put a ' + data.color + ' paint streak next to the door.</div>');
+        }
         output.scrollTop(output[0].scrollHeight);
     });
     
@@ -112,8 +116,9 @@ chatInfra.on('name_set', function(data) {
 
     chatCom.on('message', function (data) {
         data = JSON.parse(data);
-        output.append('<div class="'+data.type+'">' + '<span class="name">' + data.username + ':</span> '+ data.message + '</div>');
-        
+        if (currentRoomName == data.room) {
+            output.append('<div class="'+data.type+'">' + '<span class="name">' + data.username + ':</span> '+ data.message + '</div>');
+        }
         if (data.type == 'myMessage') {
             if (data.message == '.highscore') {
                 output.append('<div class="serverMessage">' + highscore.map(function(element){
