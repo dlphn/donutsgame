@@ -156,6 +156,7 @@ chatInfra.on('name_set', function(data) {
             if (data.message == '.go north' || data.message == '.north' || data.message == '.n') {
                 if (currentRoomName === "Dark entrance")  {
                     var data = {
+                        username: data.username,
                         room: currentRoomName,
                         message: 'exit_DarkEntrance',
                         type: 'serverMessage'
@@ -169,6 +170,7 @@ chatInfra.on('name_set', function(data) {
             if (data.message == '.go south' || data.message == '.south' || data.message == '.s') {
                 if (currentRoomName === "Golden bathroom")  {
                     var data = {
+                        username: data.username,
                         room: currentRoomName,
                         message: 'exit_GoldenBathroom',
                         type: 'serverMessage'
@@ -202,6 +204,7 @@ chatInfra.on('name_set', function(data) {
             }
             if (data.message.startsWith('.paint') && (data.message !== '.paint') && (data.message !== '.paint ')) {
                 var data = {
+                    username: data.username,
                     room: currentRoomName,
                     message: 'paint',
                     type: 'serverMessage',
@@ -212,6 +215,7 @@ chatInfra.on('name_set', function(data) {
             }
             if (data.message.startsWith('.pick') && (data.message !== '.pick') && (data.message !== '.pick ')) {
                 var data = {
+                    username: data.username,
                     room: currentRoomName,
                     message: 'pickObject',
                     type: 'serverMessage',
@@ -222,6 +226,7 @@ chatInfra.on('name_set', function(data) {
             }
             if (data.message == '.bag') {
                 var data = {
+                    username: data.username,
                     room: currentRoomName,
                     message: 'showBag',
                     type: 'serverMessage'
@@ -231,6 +236,7 @@ chatInfra.on('name_set', function(data) {
             }
             if (data.message.startsWith('.use') && (data.message !== '.use') && (data.message !== '.use ')) {
                 var data = {
+                    username: data.username,
                     room: currentRoomName,
                     message: 'useObject',
                     type: 'serverMessage',

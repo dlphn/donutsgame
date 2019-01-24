@@ -27,7 +27,7 @@ exports.initialize = function(server) {
         socket.on("set_name",function(data){
             socket.nickname = data.name;
             counter ++;
-            playerList[ socket.id ] = {
+            playerList[ socket.nickname ] = {
                 id: counter,
                 name: data.name,
                 bag: [
@@ -73,163 +73,162 @@ exports.initialize = function(server) {
         socket.on('message', function(message) {
             message = JSON.parse(message);
             console.log(message);
-            socket.get('nickname', function(err, nickname) {
-               if (message.message == 'exit_DarkEntrance') {
-                    console.log("changing room...");
-                    socket.leave(darkRoom.name);
-                    socket.join(goldenRoom.name);
-                    socket.namespace = chatCom;
-                    socket.leave(darkRoom.name);
-                    socket.join(goldenRoom.name);
-                    socket.namespace = chatInfra;
-                    socket.emit('connectToRoom', goldenRoom);
-                    socket.broadcast.to(goldenRoom.name).emit('user_entered', nickname);
-                    socket.broadcast.to(darkRoom.name).emit('user_left', nickname);
-                }
-                if (message.message == 'exit_GoldenBathroom') {
-                    console.log("changing room...");
-                    socket.leave(goldenRoom.name);
-                    socket.join(darkRoom.name);
-                    socket.namespace = chatCom;
-                    socket.leave(goldenRoom.name);
-                    socket.join(darkRoom.name);
-                    socket.namespace = chatInfra;
-                    socket.emit('connectToRoom', darkRoom);
-                    socket.broadcast.to(darkRoom.name).emit('user_entered', nickname);
-                    socket.broadcast.to(goldenRoom.name).emit('user_left', nickname);
-                }
-                if (message.message == 'paint') {
-                    console.log("painting a streak in", message.room);
-                    if ((playerList[ socket.id ].bag[3].number == 0) && (playerList[ socket.id ].bag[4].number == 0)) {
-                        socket.to(message.room).emit('no_paint');
-                    } else {
-                        if (message.room == darkRoom.name) {
-                            darkRoom.color = message.color;
-                            console.log(darkRoom);
-                            data = {
-                                user: nickname,
-                                color: message.color
-                            };
-                            darkRoom.save(function (err, updatedRoom) {
-                                if (err) return console.error(err);
-                                darkRoom = updatedRoom;
-                                socket.to(darkRoom.name).emit('your_paint_streak', message.color);
-                                socket.broadcast.to(darkRoom.name).emit('paint_streak', data);
-                            });
-                        } else if (message.room == goldenRoom.name) {
-                            goldenRoom.color = message.color;
-                            data = {
-                                user: nickname,
-                                color: message.color
-                            };
-                            goldenRoom.save(function (err, updatedRoom) {
-                                if (err) return console.error(err);
-                                goldenRoom = updatedRoom;
-                                socket.to(goldenRoom.name).emit('your_paint_streak', message.color);
-                                socket.broadcast.to(goldenRoom.name).emit('paint_streak', data);
-                            });
-                        }
-                    }
-                }
-                if (message.message == 'pickObject') {
-                    console.log("picking an object in", message.room);
+            nickname = message.username;
+            if (message.message == 'exit_DarkEntrance') {
+                console.log("changing room...");
+                socket.leave(darkRoom.name);
+                socket.join(goldenRoom.name);
+                socket.namespace = chatCom;
+                socket.leave(darkRoom.name);
+                socket.join(goldenRoom.name);
+                socket.namespace = chatInfra;
+                socket.emit('connectToRoom', goldenRoom);
+                socket.broadcast.to(goldenRoom.name).emit('user_entered', nickname);
+                socket.broadcast.to(darkRoom.name).emit('user_left', nickname);
+            }
+            if (message.message == 'exit_GoldenBathroom') {
+                console.log("changing room...");
+                socket.leave(goldenRoom.name);
+                socket.join(darkRoom.name);
+                socket.namespace = chatCom;
+                socket.leave(goldenRoom.name);
+                socket.join(darkRoom.name);
+                socket.namespace = chatInfra;
+                socket.emit('connectToRoom', darkRoom);
+                socket.broadcast.to(darkRoom.name).emit('user_entered', nickname);
+                socket.broadcast.to(goldenRoom.name).emit('user_left', nickname);
+            }
+            if (message.message == 'paint') {
+                console.log("painting a streak in", message.room);
+                if ((playerList[ socket.nickname ].bag[3].number == 0) && (playerList[ socket.nickname ].bag[4].number == 0)) {
+                    socket.emit('no_paint');
+                } else {
                     if (message.room == darkRoom.name) {
-                        if ((message.object == 'bottle') || (message.object == 'water')) {
-                            if (bagWeight + 10 > maxWeight) {
-                                socket.to(message.room).emit('tooHeavy', message.object);
-                            } else {
-                                playerList[ socket.id ].bag[0].number += 1;
-                                bagWeight += 10;
-                                console.log('picked', playerList);
-                                socket.to(message.room).emit('picked', 'bottle');
-                            }
-                        } else if (message.object == 'brush') {
-                            if (bagWeight + 5 > maxWeight) {
-                                socket.to(message.room).emit('tooHeavy', message.object);
-                            } else {
-                                playerList[ socket.id ].bag[3].number += 1;
-                                bagWeight += 5;
-                                console.log('picked', playerList);
-                                socket.to(message.room).emit('picked', message.object);
-                            }
-                        } else {
-                            socket.to(message.room).emit('notPicked', message.object);
-                        }
+                        darkRoom.color = message.color;
+                        console.log(darkRoom);
+                        data = {
+                            user: nickname,
+                            color: message.color
+                        };
+                        darkRoom.save(function (err, updatedRoom) {
+                            if (err) return console.error(err);
+                            darkRoom = updatedRoom;
+                            socket.to(darkRoom.name).emit('your_paint_streak', message.color);
+                            socket.broadcast.to(darkRoom.name).emit('paint_streak', data);
+                        });
                     } else if (message.room == goldenRoom.name) {
-                        if (message.object == 'pill') {
-                            if (bagWeight + 1.5 > maxWeight) {
-                                socket.to(message.room).emit('tooHeavy', message.object);
-                            } else {
-                                playerList[ socket.id ].bag[2].number += 1;
-                                bagWeight += 1.5;
-                                socket.to(message.room).emit('picked', message.object);
-                            }
-                        } else if (message.object == 'golden brush') {
-                            if (bagWeight + 15 > maxWeight) {
-                                socket.to(message.room).emit('tooHeavy', message.object);
-                            } else {
-                                playerList[ socket.id ].bag[4].number += 1;
-                                bagWeight += 15;
-                                socket.to(message.room).emit('picked', message.object);
-                            }
-                        } else {
-                            socket.to(message.room).emit('notPicked', message.object);
-                        }
+                        goldenRoom.color = message.color;
+                        data = {
+                            user: nickname,
+                            color: message.color
+                        };
+                        goldenRoom.save(function (err, updatedRoom) {
+                            if (err) return console.error(err);
+                            goldenRoom = updatedRoom;
+                            socket.to(goldenRoom.name).emit('your_paint_streak', message.color);
+                            socket.broadcast.to(goldenRoom.name).emit('paint_streak', data);
+                        });
                     }
                 }
-                if (message.message == 'showBag') {
-                    var bag = "";
-                    for (var i=0; i<playerList[socket.id].bag.length; i++) {
-                        bag += playerList[socket.id].bag[i].number + " " + playerList[socket.id].bag[i].item + ", ";
-                    }
-                    bag += "for a total of "+bagWeight+"kg, "
-                    socket.to(message.room).emit('bag', bag);
-                }
-                if (message.message == 'useObject') {
-                    console.log("using object in", message.room);
+            }
+            if (message.message == 'pickObject') {
+                console.log("picking an object in", message.room);
+                if (message.room == darkRoom.name) {
                     if ((message.object == 'bottle') || (message.object == 'water')) {
-                        if (playerList[ socket.id ].bag[0].number > 0) {
-                            playerList[ socket.id ].bag[0].number += -1;
-                            bagWeight += -10;
-                            socket.to(message.room).emit('used', message.object);
+                        if (bagWeight + 10 > maxWeight) {
+                            socket.emit('tooHeavy', message.object);
                         } else {
-                            socket.to(message.room).emit('unused', message.object);
-                        }
-                    } else if (message.object == 'pill') {
-                        if (playerList[ socket.id ].bag[2].number > 0) {
-                            playerList[ socket.id ].bag[2].number += -1;
-                            bagWeight += -1.5;
-                            socket.to(message.room).emit('used', message.object);
-                        } else {
-                            socket.to(message.room).emit('unused', message.object);
+                            playerList[ socket.nickname ].bag[0].number += 1;
+                            bagWeight += 10;
+                            console.log('picked', JSON.stringify(playerList, null, 2));
+                            socket.emit('picked', 'bottle');
                         }
                     } else if (message.object == 'brush') {
-                        if (playerList[ socket.id ].bag[3].number > 0) {
-                            socket.to(message.room).emit('used', message.object);
+                        if (bagWeight + 5 > maxWeight) {
+                            socket.emit('tooHeavy', message.object);
                         } else {
-                            socket.to(message.room).emit('unused', message.object);
+                            playerList[ socket.nickname ].bag[3].number += 1;
+                            bagWeight += 5;
+                            console.log('picked', JSON.stringify(playerList, null, 2));
+                            socket.emit('picked', message.object);
+                        }
+                    } else {
+                        socket.emit('notPicked', message.object);
+                    }
+                } else if (message.room == goldenRoom.name) {
+                    if (message.object == 'pill') {
+                        if (bagWeight + 1.5 > maxWeight) {
+                            socket.emit('tooHeavy', message.object);
+                        } else {
+                            playerList[ socket.nickname ].bag[2].number += 1;
+                            bagWeight += 1.5;
+                            socket.emit('picked', message.object);
                         }
                     } else if (message.object == 'golden brush') {
-                        if (playerList[ socket.id ].bag[4].number > 0) {
-                            socket.to(message.room).emit('used', message.object);
+                        if (bagWeight + 15 > maxWeight) {
+                            socket.emit('tooHeavy', message.object);
                         } else {
-                            socket.to(message.room).emit('unused', message.object);
+                            playerList[ socket.nickname ].bag[4].number += 1;
+                            bagWeight += 15;
+                            socket.emit('picked', message.object);
                         }
-                    } else if (message.object == 'tissue') {
-                        if (playerList[ socket.id ].bag[1].number > 0) {
-                            playerList[ socket.id ].bag[1].number += -1;
-                            socket.to(message.room).emit('used', message.object);
-                        } else {
-                            socket.to(message.room).emit('unused', message.object);
-                        }
-                    } 
+                    } else {
+                        socket.emit('notPicked', message.object);
+                    }
                 }
-            });
+            }
+            if (message.message == 'showBag') {
+                var bag = "";
+                for (var i=0; i<playerList[socket.nickname].bag.length; i++) {
+                    bag += playerList[socket.nickname].bag[i].number + " " + playerList[socket.nickname].bag[i].item + ", ";
+                }
+                bag += "for a total of "+bagWeight+"kg, ";
+                socket.emit('bag', bag);
+            }
+            if (message.message == 'useObject') {
+                console.log("using object in", message.room);
+                if ((message.object == 'bottle') || (message.object == 'water')) {
+                    if (playerList[ socket.nickname ].bag[0].number > 0) {
+                        playerList[ socket.nickname ].bag[0].number += -1;
+                        bagWeight += -10;
+                        socket.emit('used', message.object);
+                    } else {
+                        socket.emit('unused', message.object);
+                    }
+                } else if (message.object == 'pill') {
+                    if (playerList[ socket.nickname ].bag[2].number > 0) {
+                        playerList[ socket.nickname ].bag[2].number += -1;
+                        bagWeight += -1.5;
+                        socket.emit('used', message.object);
+                    } else {
+                        socket.emit('unused', message.object);
+                    }
+                } else if (message.object == 'brush') {
+                    if (playerList[ socket.nickname ].bag[3].number > 0) {
+                        socket.emit('used', message.object);
+                    } else {
+                        socket.emit('unused', message.object);
+                    }
+                } else if (message.object == 'golden brush') {
+                    if (playerList[ socket.nickname ].bag[4].number > 0) {
+                        socket.emit('used', message.object);
+                    } else {
+                        socket.emit('unused', message.object);
+                    }
+                } else if (message.object == 'tissue') {
+                    if (playerList[ socket.nickname ].bag[1].number > 0) {
+                        playerList[ socket.nickname ].bag[1].number += -1;
+                        socket.emit('used', message.object);
+                    } else {
+                        socket.emit('unused', message.object);
+                    }
+                } 
+            }
         });
         
         socket.on('quit_game', function(data) {
             socket.broadcast.emit('user_quit', data);
-            delete playerList[ socket.id ];
+            delete playerList[ socket.nickname ];
             console.log(playerList);
         });
 
@@ -247,7 +246,7 @@ exports.initialize = function(server) {
             message = JSON.parse(message);
             console.log(message);
             if (message.type == "userMessage") {
-                
+
                 console.log("... message re-sent to all except sender in room "+message.room);
                 socket.broadcast.to(message.room).emit('message', JSON.stringify(message));
                 
