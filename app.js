@@ -8,11 +8,14 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var mongoose = require('mongoose');
+let config = require('./config')
 
 // create an instance of Express
 var app = express();
 
-mongoose.connect('mongodb://localhost:27017/donuts');
+const uri = "mongodb+srv://admin:" + config.password + "@" + config.cluster + ".mongodb.net/" + config.db;
+mongoose.connect(uri, {useNewUrlParser: true});
+// mongoose.connect('mongodb://localhost:27017/donuts');
 
 // all environments
 app.set('port', process.env.PORT || 3000);
